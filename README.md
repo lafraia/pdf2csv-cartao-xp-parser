@@ -8,4 +8,6 @@ node parser.js arquivo_fatura.pdf [senha]
 
 Observe no final do arquivo que será feito um ouput da soma de todos os valores encontrados para que você possa comparar com o valor total da fatura e ter certeza que todas as transações foram encontradas.
 
+_Disclaimer: Este script foi feito para o simples uso pessoal e não tem garantia de funcionamento. Use por sua conta e risco._
+
 **Créditos: [Daniel Lafraia](https://www.lafraia.com.br/)** 
