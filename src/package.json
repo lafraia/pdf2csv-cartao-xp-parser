@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "ava": "^5.1.0",
+    "pdfreader": "^2.0.0"
+  }
+}
