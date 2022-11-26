@@ -22,9 +22,10 @@ new PdfReader(options).parseFileItems(process.argv[2],
         } else if (!item) {
             if (DEBUG) console.warn(transactionAll);
             var sum = 0;
+            console.log("DATE,DESCRIPTION,VALUE,EXTRA");
             for (let i = 0; i < transactionAll.length; i++) {
                 let date = transactionAll[i].date;
-                console.log(date.getFullYear()+"-"+(date.getMonth() + 1)+"-"+date.getDate() + "," + transactionAll[i].description + "," + transactionAll[i].amount.toFixed(2) + (transactionAll[i].extra ? ("," + transactionAll[i].extra) : ""));
+                console.log(date.getFullYear()+"-"+(date.getMonth() + 1)+"-"+date.getDate() + "," + transactionAll[i].description + "," + transactionAll[i].amount.toFixed(2) + (transactionAll[i].extra ? (",\"" + transactionAll[i].extra + "\"") : ""));
                 if (transactionAll[i].amount > 0) {
                     sum += transactionAll[i].amount;
                 }
@@ -92,6 +93,8 @@ new PdfReader(options).parseFileItems(process.argv[2],
                     if (transaction['description'].match(/PARC\.(\d+)\/(\d+)/i)) {
                         let matches2 = transaction['description'].match(/PARC\.(\d+)\/(\d+)/i);
                         if (DEBUG) console.warn(":: COMPRA PARCELADA: Parcela " + matches2[1] + " de " + matches2[2]);
+                        transaction['extra'] = "Parc " + matches2[1] + "/" + matches2[2];
+                        
                         if (matches2[1] > 1) { // not first installment
                             let date = new Date(originalDate);
                             let newDate = new Date(date.setMonth(date.getMonth() + (matches2[1] - 1)));
