@@ -32,6 +32,7 @@ new PdfReader(options).parseFileItems(process.argv[2],
             }
             console.error("Sum: " + sum);
             console.error("ClosingDate: " + closingDate.day + "/" + closingDate.month + "/" + closingDate.year);
+            console.error("Transactions: " + transactionAll.length);
         } else if (ignore) {
             ignore--;
             return;
@@ -88,16 +89,24 @@ new PdfReader(options).parseFileItems(process.argv[2],
                     get--;
                     if (DEBUG) console.warn(":: DATE FOUND: " + item.text);
                     let matches = item.text.match(/^([0-9]{2})\/([0-9]{2})$/);
+                    console.warn(matches);
+                    console.warn(closingDate);
                     let originalDate = (matches[2] > closingDate.month ? closingDate.year - 1 : closingDate.year) + "-" + matches[2] + "-" + matches[1];
                     if (DEBUG) console.warn(":: ORIGINAL DATE: " + originalDate);
                     if (transaction['description'].match(/PARC\.(\d+)\/(\d+)/i)) {
                         let matches2 = transaction['description'].match(/PARC\.(\d+)\/(\d+)/i);
                         if (DEBUG) console.warn(":: COMPRA PARCELADA: Parcela " + matches2[1] + " de " + matches2[2]);
                         transaction['extra'] = "Parc " + matches2[1] + "/" + matches2[2];
-                        
+
                         if (matches2[1] > 1) { // not first installment
+                            if (matches2[1] == 12 && matches[2] == closingDate.month) {
+                                originalDate = (closingDate.year - 1) + "-" + matches[2] + "-" + matches[1];
+                                if (DEBUG) console.warn(":: COMPRA PARCELADA: Ultima parcela 12x");
+                                if (DEBUG) console.warn(":: ORIGINAL DATE (RECALC): " + originalDate);
+                            }
                             let date = new Date(originalDate);
                             let newDate = new Date(date.setMonth(date.getMonth() + (matches2[1] - 1)));
+                            if (DEBUG) console.warn(":: NEW DATE: " + newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate());
                             transaction['date'] = newDate;
                             return;
                         }
